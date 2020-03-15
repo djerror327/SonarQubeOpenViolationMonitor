@@ -40,16 +40,17 @@ public class SonarService {
         String auth = username + ":" + ps;
         byte[] encodeAuth = Base64.encodeBase64(auth.getBytes(StandardCharsets.ISO_8859_1));
         String authHeaderValue = "Basic " + new String(encodeAuth);
-        JSONObject jsonObject = SonarClient.getResponse(server + api + "Java_Robotic", authHeaderValue);
+        JSONObject jsonObject = SonarClient.getResponse(server + api + sonarQube.getProject(), authHeaderValue);
         JSONArray issuesList = (JSONArray) jsonObject.get("issues");
 
         ArrayList<String> list = new ArrayList<>();
-        Date date = new SimpleDateFormat("yyyy-MM").parse("2020-03-15");
+//        Date date = new SimpleDateFormat("yyyy-MM").parse(sonarQube.getDate());
+        Date date = sonarQube.getDate();
         SimpleDateFormat dateSonar = new SimpleDateFormat("yyyy-MM");
         issuesList.forEach(jObj ->
                 {
                     try {
-                        if (((JSONObject) jObj).get("author").toString().equals("djerror327@gmail.com") && ((JSONObject) jObj).get("status").toString().equals("OPEN") && dateSonar.parse(String.valueOf(((JSONObject) jObj).get("updateDate")).substring(0, 7)).equals(date)) {
+                        if (((JSONObject) jObj).get("author").toString().equals(sonarQube.getAuthor()) && ((JSONObject) jObj).get("status").toString().equals("OPEN") && dateSonar.parse(String.valueOf(((JSONObject) jObj).get("updateDate")).substring(0, 7)).equals(date)) {
                             list.add(((JSONObject) jObj).get("status").toString());
                         }
                     } catch (java.text.ParseException e) {

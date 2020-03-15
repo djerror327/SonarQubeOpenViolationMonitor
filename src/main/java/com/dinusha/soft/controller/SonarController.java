@@ -2,6 +2,7 @@ package com.dinusha.soft.controller;
 
 import com.dinusha.soft.model.SonarQube;
 import com.dinusha.soft.service.SonarService;
+import com.dinusha.soft.utill.JSON;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,19 +27,31 @@ public class SonarController {
     SonarService sonarService;
 
     @RequestMapping(value = "/sonarViolationCount", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
-    public @ResponseBody JSONObject getSonarViolationCount(@RequestBody Map<String, Object> map) {
+    public @ResponseBody
+    Object getSonarViolationCount(@RequestBody Map<String, Object> map) {
 
         JSONObject jsonObject = new JSONObject(map);
         System.out.println(jsonObject);
 
 
-        return jsonObject;
-//        try {
-//            return String.valueOf(sonarService.getViolationCount(null));
-//        } catch (ParseException | java.text.ParseException | IOException e) {
-//            e.printStackTrace();
-//        }
-//        return "Sever error occurred contact administrator";
+//        return jsonObject;
+        try {
+            SonarQube sonarQube = new SonarQube();
+
+            sonarQube.setDate((String) jsonObject.get("date"));
+            sonarQube.setProject((String) jsonObject.get("project"));
+            sonarQube.setAuthor((String) jsonObject.get("author"));
+
+            int vCount = sonarService.getViolationCount(sonarQube);
+            HashMap<String, Integer> hashMap = new HashMap<>();
+            hashMap.put("vcount", vCount);
+            return hashMap;
+        } catch (ParseException | java.text.ParseException | IOException e) {
+            e.printStackTrace();
+        }
+        HashMap<String, String> mapError = new HashMap<>();
+        mapError.put("vcounterror", "Sever error occurred while getting violation count contact administrator!");
+        return mapError;
     }
 
 }

@@ -17,7 +17,7 @@ public class SonarQube {
     private String project;
 
     private String author;
-    private String date;
+    private Date date;
 
     public String getProject() {
         return project;
@@ -35,13 +35,12 @@ public class SonarQube {
         this.author = author;
     }
 
-    public String getDate() {
+    public Date getDate() {
         return date;
     }
 
     public void setDate(String date) throws ParseException {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM");
-        Date parsed = format.parse(date);
-        this.date = parsed.toString();
+        this.date = format.parse(date);
     }
 }

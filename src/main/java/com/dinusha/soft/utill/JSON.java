@@ -19,11 +19,11 @@ public class JSON {
 
     private static JSONParser parser = new JSONParser();
 
-    public static JSONObject parseJsonObject(StringBuilder response) throws ParseException {
-        return (JSONObject) parser.parse(String.valueOf(response));
+    public static JSONObject parseJsonObject(StringBuilder value) throws ParseException {
+        return (JSONObject) parser.parse(String.valueOf(value));
     }
 
-    public static JSONArray parseJsonArray(StringBuilder response) throws ParseException {
-        return (JSONArray) parser.parse(String.valueOf(response));
+    public static JSONArray parseJsonArray(StringBuilder value) throws ParseException {
+        return (JSONArray) parser.parse(String.valueOf(value));
     }
 }
