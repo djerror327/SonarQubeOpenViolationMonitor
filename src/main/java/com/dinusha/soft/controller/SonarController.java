@@ -2,15 +2,16 @@ package com.dinusha.soft.controller;
 
 import com.dinusha.soft.model.SonarQube;
 import com.dinusha.soft.service.SonarService;
-import com.dinusha.soft.utill.JSON;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.awt.*;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -30,14 +31,10 @@ public class SonarController {
     public @ResponseBody
     Object getSonarViolationCount(@RequestBody Map<String, Object> map) {
 
-        JSONObject jsonObject = new JSONObject(map);
-        System.out.println(jsonObject);
 
-
-//        return jsonObject;
         try {
+            JSONObject jsonObject = new JSONObject(map);
             SonarQube sonarQube = new SonarQube();
-
             sonarQube.setDate((String) jsonObject.get("date"));
             sonarQube.setProject((String) jsonObject.get("project"));
             sonarQube.setAuthor((String) jsonObject.get("author"));
@@ -46,6 +43,7 @@ public class SonarController {
             HashMap<String, Integer> hashMap = new HashMap<>();
             hashMap.put("vcount", vCount);
             return hashMap;
+
         } catch (ParseException | java.text.ParseException | IOException e) {
             e.printStackTrace();
         }
@@ -53,5 +51,4 @@ public class SonarController {
         mapError.put("vcounterror", "Sever error occurred while getting violation count contact administrator!");
         return mapError;
     }
-
 }

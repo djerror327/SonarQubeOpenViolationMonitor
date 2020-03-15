@@ -44,7 +44,6 @@ public class SonarService {
         JSONArray issuesList = (JSONArray) jsonObject.get("issues");
 
         ArrayList<String> list = new ArrayList<>();
-//        Date date = new SimpleDateFormat("yyyy-MM").parse(sonarQube.getDate());
         Date date = sonarQube.getDate();
         SimpleDateFormat dateSonar = new SimpleDateFormat("yyyy-MM");
         issuesList.forEach(jObj ->
@@ -60,12 +59,4 @@ public class SonarService {
         );
         return list.size();
     }
-
-//    public static void main(String[] args) {
-//        try {
-//            System.out.println(SonarService.getViolationCount());
-//        } catch (ParseException | java.text.ParseException | IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
 }

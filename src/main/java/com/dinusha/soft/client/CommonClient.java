@@ -20,6 +20,7 @@ class CommonClient {
     }
 
     static StringBuilder GETRequest(String URL, String authHeader) throws IOException {
+
         URL url = new URL(URL);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestProperty("Authorization", authHeader);
@@ -29,7 +30,6 @@ class CommonClient {
         StringBuilder response = new StringBuilder();
         if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-
             while ((readLine = bufferedReader.readLine()) != null) {
                 response.append(readLine);
             }

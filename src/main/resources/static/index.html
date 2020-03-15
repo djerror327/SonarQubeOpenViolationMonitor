@@ -1,5 +1,9 @@
 <!DOCTYPE html>
 <html>
+<!-- /**
+ * @author Dinusha Jayasekara on 3/15/2020
+ * @project utility-monitor
+ */ -->
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -11,13 +15,9 @@
             var name = document.getElementById('name').value;
             var date = document.getElementById('date').value;
             var jsonData = { "project": "" + project + "", "author": "" + name + "", "date": "" + date + "" }
-            // alert(JSON.stringify(jsonData))
-            // console.log(JSON.stringify(jsonData))
-
-            // formData.append('file', file);
 
             var xmlhttp = new XMLHttpRequest();
-            // Add any event handlers here...
+            
             xmlhttp.onreadystatechange = function () {
                 if (this.readyState == 4 && this.status == 200) {
                     document.getElementById("para").innerHTML =

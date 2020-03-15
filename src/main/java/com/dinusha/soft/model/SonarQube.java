@@ -1,16 +1,13 @@
 package com.dinusha.soft.model;
 
-import lombok.Data;
+/**
+ * @author Dinusha Jayasekara on 3/15/2020
+ * @project utility-monitor
+ */
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
-/**
- * @author jayas on 3/15/2020
- * @project utility-monitor
- */
-
 
 public class SonarQube {
 
@@ -42,5 +39,14 @@ public class SonarQube {
     public void setDate(String date) throws ParseException {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM");
         this.date = format.parse(date);
+    }
+
+    @Override
+    public String toString() {
+        return "SonarQube{" +
+                "project='" + project + '\'' +
+                ", author='" + author + '\'' +
+                ", date=" + date +
+                '}';
     }
 }
