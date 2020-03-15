@@ -6,6 +6,7 @@ package com.dinusha.soft.client;
  */
 
 import com.dinusha.soft.utill.MethodType;
+import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,6 +14,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+@Component
 class CommonClient {
     private CommonClient() {
     }

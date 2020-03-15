@@ -8,10 +8,12 @@ package com.dinusha.soft.client;
 import com.dinusha.soft.utill.JSON;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
 @SuppressWarnings("unchecked")
+@Component
 public class SonarClient {
     public static JSONObject getResponse(String URL, String authHeader) throws IOException, ParseException, java.text.ParseException {
 

@@ -6,10 +6,15 @@ package com.dinusha.soft.service;
  */
 
 import com.dinusha.soft.client.SonarClient;
+import com.dinusha.soft.model.SonarQube;
 import org.apache.commons.codec.binary.Base64;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -18,13 +23,24 @@ import java.util.ArrayList;
 import java.util.Date;
 
 @SuppressWarnings("unchecked")
+@Service
+@PropertySource("sonar.properties")
 public class SonarService {
 
-    static int getViolationCount() throws ParseException, java.text.ParseException, IOException {
-        String auth = "admin:admin";
+    @Autowired
+    Environment env;
+
+    public int getViolationCount(SonarQube sonarQube) throws ParseException, java.text.ParseException, IOException {
+
+        String server = env.getProperty("sonar.server");
+        String api = env.getProperty("sonar.api");
+        String username = env.getProperty("sonar.username");
+        String ps = env.getProperty("sonar.ps");
+
+        String auth = username + ":" + ps;
         byte[] encodeAuth = Base64.encodeBase64(auth.getBytes(StandardCharsets.ISO_8859_1));
         String authHeaderValue = "Basic " + new String(encodeAuth);
-        JSONObject jsonObject = SonarClient.getResponse("http://localhost:9000/api/issues/search?projectKeys=Java_Robotic", authHeaderValue);
+        JSONObject jsonObject = SonarClient.getResponse(server + api + "Java_Robotic", authHeaderValue);
         JSONArray issuesList = (JSONArray) jsonObject.get("issues");
 
         ArrayList<String> list = new ArrayList<>();
@@ -44,11 +60,11 @@ public class SonarService {
         return list.size();
     }
 
-    public static void main(String[] args) {
-        try {
-            System.out.println(SonarService.getViolationCount());
-        } catch (ParseException | java.text.ParseException | IOException e) {
-            e.printStackTrace();
-        }
-    }
+//    public static void main(String[] args) {
+//        try {
+//            System.out.println(SonarService.getViolationCount());
+//        } catch (ParseException | java.text.ParseException | IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
 }

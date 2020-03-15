@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Title</title>
+    <script>
+
+        function sendData() {
+            var project = document.getElementById('project').value;
+            var name = document.getElementById('name').value;
+            var date = document.getElementById('date').value;
+            var jsonData = { "project": "" + project + "", "author": "" + name + "", "date": "" + date + "" }
+            // alert(JSON.stringify(jsonData))
+            // console.log(JSON.stringify(jsonData))
+
+            // formData.append('file', file);
+
+            var xmlhttp = new XMLHttpRequest();
+            // Add any event handlers here...
+            xmlhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    document.getElementById("para").innerHTML =
+                        this.responseText;
+                }
+            };
+            xmlhttp.open('POST', '/sonarViolationCount', true);
+            xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            xmlhttp.send(JSON.stringify(jsonData));
+
+            return false; // To avoid actual submission of the form
+
+        }
+    </script>
+
+</head>
+
+<body>
+    <form id="form">
+
+
+        <p>project key : <input id="project" type="text" name="project" value="java robot" required /></p>
+        author <input id="name" type="text" name="author" value="dsdsds" /><br />
+        date<input id="date" type="date" name="date" /><br />
+        <p><input type="button" onclick="sendData()" value="click" /></p>
+
+<p id="para"></p>
+
+    </form>
+</body>
+
+</html>
