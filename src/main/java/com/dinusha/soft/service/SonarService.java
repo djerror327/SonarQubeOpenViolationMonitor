@@ -20,7 +20,9 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 @SuppressWarnings("unchecked")
 @Service
@@ -30,22 +32,27 @@ public class SonarService {
     @Autowired
     Environment env;
 
-    public int getViolationCount(SonarQube sonarQube) throws ParseException, java.text.ParseException, IOException {
-
-        String server = env.getProperty("sonar.server");
-        String api = env.getProperty("sonar.api");
+    private String getAuthHeader() {
         String username = env.getProperty("sonar.username");
         String ps = env.getProperty("sonar.ps");
 
         String auth = username + ":" + ps;
         byte[] encodeAuth = Base64.encodeBase64(auth.getBytes(StandardCharsets.ISO_8859_1));
-        String authHeaderValue = "Basic " + new String(encodeAuth);
-        JSONObject jsonObject = SonarClient.getResponse(server + api + sonarQube.getProject(), authHeaderValue);
+        return ("Basic " + new String(encodeAuth));
+    }
+
+    public int getViolationCount(SonarQube sonarQube) throws ParseException, IOException {
+
+        String server = env.getProperty("sonar.server");
+        String api = env.getProperty("sonar.api.issues");
+
+        JSONObject jsonObject = SonarClient.getResponse(server + api + sonarQube.getProject(), getAuthHeader());
         JSONArray issuesList = (JSONArray) jsonObject.get("issues");
 
         ArrayList<String> list = new ArrayList<>();
         Date date = sonarQube.getDate();
         SimpleDateFormat dateSonar = new SimpleDateFormat("yyyy-MM");
+
         issuesList.forEach(jObj ->
                 {
                     try {
@@ -58,5 +65,20 @@ public class SonarService {
                 }
         );
         return list.size();
+    }
+
+    public List<String> getProjects() throws IOException, ParseException {
+        String server = env.getProperty("sonar.server");
+        String api = env.getProperty("sonar.api.projects");
+        JSONObject jsonObject = SonarClient.getResponse(server + api, getAuthHeader());
+        JSONArray jsonArray = (JSONArray) jsonObject.get("components");
+        ArrayList<String> list = new ArrayList<>();
+        jsonArray.forEach(jObj ->
+                {
+                    list.add(((JSONObject) jObj).get("key").toString());
+                }
+        );
+        Collections.sort(list);
+        return list;
     }
 }

@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -50,5 +52,18 @@ public class SonarController {
         HashMap<String, String> mapError = new HashMap<>();
         mapError.put("vcounterror", "Sever error occurred while getting violation count contact administrator!");
         return mapError;
+    }
+
+    @RequestMapping(value = "/projects", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody
+    List<String> getProjects() {
+        ArrayList<String> list = new ArrayList<>();
+        list.add("Data not loaded");
+        try {
+            return sonarService.getProjects();
+        } catch (IOException | ParseException e) {
+            e.printStackTrace();
+        }
+        return list;
     }
 }
