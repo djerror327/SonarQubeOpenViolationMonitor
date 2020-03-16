@@ -82,4 +82,10 @@ public class SonarController {
         list.add("Data not loaded");
         return list;
     }
+
+    @RequestMapping(value = "/serverStatus",method = RequestMethod.GET,produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody Map<String,Boolean> getServerStatus() throws IOException {
+        return sonarService.getServerStatus();
+
+    }
 }

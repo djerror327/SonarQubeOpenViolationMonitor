@@ -94,4 +94,21 @@ public class SonarService {
         Collections.sort(listAuthors);
         return listAuthors;
     }
+
+    public Map<String, Boolean> getServerStatus() {
+        String server = env.getProperty("sonar.server");
+        HashMap<String, Boolean> hashMap = new HashMap<>();
+        try {
+            boolean status = SonarClient.getServerStatus(server);
+            if (status) {
+                hashMap.put("status", true);
+            } else {
+                hashMap.put("status", false);
+            }
+            return hashMap;
+        } catch (IOException e) {
+            hashMap.put("status", false);
+            return hashMap;
+        }
+    }
 }

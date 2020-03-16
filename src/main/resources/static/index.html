@@ -105,6 +105,33 @@
             location.reload();
             return true;
         }
+
+        //get server status
+        function getServerStatus() {
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    var jsonObj = JSON.parse(this.responseText)
+                    console.log(jsonObj.status);
+                    if (jsonObj.status) {
+                        document.getElementById('sonarStatus').style.background = "#4CAF50";
+                        var cmbProjects = document.getElementById('sonarStatus').innerHTML = "SonarQube server connection successful";
+                    } else {
+                        document.getElementById('sonarStatus').style.background = "#d9534f";
+                        var cmbProjects = document.getElementById('sonarStatus').innerHTML = "Sonar server connection failed";
+                    }
+
+
+                }
+            };
+            xmlhttp.open('GET', '/serverStatus', true);
+            xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            xmlhttp.send();
+
+            return false; // To avoid actual submission of the form
+
+        }
+        document.addEventListener("DOMContentLoaded", getServerStatus);
     </script>
 
     <style>
@@ -119,7 +146,6 @@
             margin: 0;
             padding: 0;
             overflow-x: hidden;
-
             font-family: Arial, Helvetica, sans-serif;
         }
 
@@ -168,8 +194,10 @@
             background-color: #444;
             width: 100%;
             padding: 18px;
-            text-align: center;
+            text-align: left;
             color: white;
+            height: 205px;
+            font-size: 11px;
         }
 
         input[type=month],
@@ -190,7 +218,7 @@
             /* font-size: 9px; */
         }
 
-        .serverConnection {
+        .serverStatus {
             font-size: 13.5px;
             text-align: left;
             /* padding-top: 47px; */
@@ -198,10 +226,15 @@
             /* padding-bottom: 18px; */
             border: 1px solid #ccc;
             border-radius: 4px;
-            box-sizing: border-box;
             /* padding-left: 68px; */
+
             padding-left: 11px;
-            padding-top: 15px;
+            padding-top: 5px;
+            padding-bottom: 5px;
+            margin: 6px 0;
+            box-sizing: border-box;
+            color: #fff;
+            background-color: #4CAF50;
         }
 
         .btn {
@@ -209,8 +242,25 @@
             background-color: #4CAF50;
         }
 
-        #divResult {
+        .serverResult {
             height: auto;
+            font-size: 13.5px;
+            text-align: left;
+            /* padding-top: 47px; */
+            /* padding-right: 20px; */
+            /* padding-bottom: 18px; */
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            /* padding-left: 68px; */
+            padding: 6px;
+            padding-left: 11px;
+            padding-top: 15px;
+            /* width: 100%; */
+            /* padding: 12px 20px; */
+            margin: 6px 0;
+            box-sizing: border-box;
+            /* color: #fff;
+            background-color: #4CAF50; */
         }
 
         #connect {
@@ -271,11 +321,11 @@
     </article>
     <aside>
 
-        <div class="serverConnection" id="connect">SonarQube Connection successful</div>
+        <div class="serverStatus" id="sonarStatus"></div>
 
-        <div class="serverConnection" id="connect">MySQL Connection successful</div>
+        <div class="serverStatus" id="mysqlStatus" style="background-color: #d9534f;">MySQL Connection failed</div>
         <br />
-        <div class="serverConnection" id="divResult">
+        <div class="serverResult" id="divResult">
             <div>Result</div>
             <div>
                 <p id="sonarVCount"></p>
@@ -286,7 +336,8 @@
         </div>
     </aside>
     <footer>
-        <p>Footer</p>
+        <p>Developed by Author name</p>
+        <small id="copyright">&copy; Copyright 2018, Example Corporation</small>
     </footer>
 </body>
 

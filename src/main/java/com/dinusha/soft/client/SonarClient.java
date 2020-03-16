@@ -12,11 +12,16 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
-@SuppressWarnings("unchecked")
-@Component
-public class SonarClient {
-    public static JSONObject getResponse(String URL, String authHeader) throws IOException, ParseException {
-        StringBuilder response = CommonClient.GETRequest(URL, authHeader);
-        return JSON.parseJsonObject(response);
+        @SuppressWarnings("unchecked")
+                @Component
+                public class SonarClient {
+
+                    public static JSONObject getResponse(String URL, String authHeader) throws IOException, ParseException {
+                        StringBuilder response = CommonClient.GETRequest(URL, authHeader);
+                        return JSON.parseJsonObject(response);
+                    }
+
+                    public static Boolean getServerStatus(String server) throws IOException {
+                        return CommonClient.checkServerStatus(server);
     }
 }
