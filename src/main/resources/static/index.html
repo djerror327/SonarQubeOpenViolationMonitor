@@ -24,7 +24,7 @@
                 if (this.readyState == 4 && this.status == 200) {
                     var vCount = this.responseText;
                     var jsonVCount = JSON.parse(vCount);
-                    document.getElementById("para").innerHTML = "Violation count : " + "" + jsonVCount.vcount + "";
+                    document.getElementById("sonarVCount").innerHTML = "Sonar violation count : " + "" + jsonVCount.vcount + "";
                 }
             };
             xmlhttp.open('POST', '/sonarViolationCount', true);
@@ -100,7 +100,11 @@
             option.value = item;
             cmbProjects.appendChild(option);
         }
-        // document.addEventListener("DOMContentLoaded", getAuthors);
+
+        function pageReload() {
+            location.reload();
+            return true;
+        }
     </script>
 
     <style>
@@ -108,57 +112,116 @@
             box-sizing: border-box;
         }
 
+        html,
         body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+
             font-family: Arial, Helvetica, sans-serif;
         }
 
         /* Style the header */
         header {
-            background-color: #666;
-            padding: 30px;
-            text-align: center;
-            font-size: 35px;
+            background-color: #000;
+            padding-top: 2px;
+            padding-right: 1px;
+            padding-bottom: 2px;
+            padding-left: 68px;
+            text-align: left;
+            /* font-size: 9px; */
             color: white;
-        }
-
-        /* Create two columns/boxes that floats next to each other */
-        nav {
-            float: left;
-            width: 30%;
-            height: 300px;
-            /* only for demonstration, should be removed */
-            background: #ccc;
-            padding: 20px;
-        }
-
-        /* Style the list inside the menu */
-        nav ul {
-            list-style-type: none;
-            padding: 0;
         }
 
         article {
             float: left;
-            padding: 20px;
-            width: 70%;
+            /* padding: 20px; */
+            padding-top: 47px;
+            padding-right: 20px;
+            padding-bottom: 20px;
+            padding-left: 68px;
+            width: 50%;
             background-color: #f1f1f1;
-            height: 300px;
+            height: 443px;
             /* only for demonstration, should be removed */
         }
 
-        /* Clear floats after the columns */
-        section:after {
-            content: "";
-            display: table;
-            clear: both;
+        aside {
+            background-color: #f1f1f1;
+            float: left;
+            /* padding: 20px; */
+            padding-top: 47px;
+            padding-right: 20px;
+            padding-bottom: 20px;
+            padding-left: 68px;
+            width: 50%;
+
+            height: 443px;
+            /* only for demonstration, should be removed */
         }
 
         /* Style the footer */
         footer {
-            background-color: #777;
-            padding: 10px;
+            float: right;
+            background-color: #444;
+            width: 100%;
+            padding: 18px;
             text-align: center;
             color: white;
+        }
+
+        input[type=month],
+        input[type=button],
+        select {
+            width: 70%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        label {
+            display: block;
+            font-size: 13.5px;
+            /* font-size: 9px; */
+        }
+
+        .serverConnection {
+            font-size: 13.5px;
+            text-align: left;
+            /* padding-top: 47px; */
+            /* padding-right: 20px; */
+            /* padding-bottom: 18px; */
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            /* padding-left: 68px; */
+            padding-left: 11px;
+            padding-top: 15px;
+        }
+
+        .btn {
+            color: #fff;
+            background-color: #4CAF50;
+        }
+
+        #divResult {
+            height: auto;
+        }
+
+        #connect {
+            /* width: 100%; */
+            padding: 6px;
+            padding-left: 11px;
+            /* padding: 12px 20px; */
+            margin: 6px 0;
+            box-sizing: border-box;
+            color: #fff;
+            background-color: #4CAF50;
         }
 
         /* Responsive layout - makes the two columns/boxes stack on top of each other instead of next to each other, on small screens */
@@ -167,7 +230,7 @@
             nav,
             article {
                 width: 100%;
-                height: auto;
+                height: 100%;
             }
         }
     </style>
@@ -176,30 +239,52 @@
 
 <body>
     <header>
-        <h2>Cities</h2>
+        <h2>IMonitoring</h2>
+
     </header>
-    <section>
-        <nav>
-            <ul>
-                <li><a href="#">London</a></li>
-                <li><a href="#">Paris</a></li>
-                <li><a href="#">Tokyo</a></li>
-            </ul>
-        </nav>
-        <article>
-            <form id="form">
-                project<select id="cmbProjects" name="project" onchange="getAuthors()" required>
+    <article>
+        <form id="form">
+            <div>
+                <label>SonarQube Project</label>
+                <select id="cmbProjects" name="project" onchange="getAuthors()" required>
                     <option selected disabled hidden>Select a project</option>
-                </select><br />
-                author<select id="cmbAuhors" name="author" required>
+                </select>
+            </div>
+            <div>
+                <label>Author</label>
+                <select id="cmbAuhors" name="author" required>
                     <option disabled selected hidden>Select an author</option>
-                </select><br />
-                date<input id="date" type="month" name="date" required /><br />
-                <p><input type="button" onclick="sendData()" value="click" /></p>
-                <p id="para"></p>
-            </form>
-        </article>
-    </section>
+                </select>
+            </div>
+            <div>
+                <label>Month</label>
+                <input id="date" type="month" name="date" required /><br />
+            </div>
+            <div>
+                <input class="btn" type="button" onclick="sendData()" value="Calculate Violations" />
+            </div>
+            <div>
+                <input class="btn" type="button" onclick="pageReload()" value="Clear" />
+            </div>
+
+        </form>
+    </article>
+    <aside>
+
+        <div class="serverConnection" id="connect">SonarQube Connection successful</div>
+
+        <div class="serverConnection" id="connect">MySQL Connection successful</div>
+        <br />
+        <div class="serverConnection" id="divResult">
+            <div>Result</div>
+            <div>
+                <p id="sonarVCount"></p>
+            </div>
+            <div>
+                <p id="MySQLVCount"></p>
+            </div>
+        </div>
+    </aside>
     <footer>
         <p>Footer</p>
     </footer>
