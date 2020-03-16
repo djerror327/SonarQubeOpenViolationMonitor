@@ -21,7 +21,9 @@
 
             xmlhttp.onreadystatechange = function () {
                 if (this.readyState == 4 && this.status == 200) {
-                    document.getElementById("para").innerHTML = this.responseText;
+                    var vCount = this.responseText;
+                    var jsonVCount = JSON.parse(vCount);
+                    document.getElementById("para").innerHTML = "Violation count : " + "" + jsonVCount.vcount + "";
                 }
             };
             xmlhttp.open('POST', '/sonarViolationCount', true);
@@ -112,7 +114,7 @@
         author<select id="cmbAuhors" name="author" required>
             <option disabled selected hidden>Select an author</option>
         </select><br />
-        date<input id="date" type="date" name="date" required /><br />
+        date<input id="date" type="month" name="date" required /><br />
         <p><input type="button" onclick="sendData()" value="click" /></p>
         <!-- <button onclick="getAuthors()">load authors</button> -->
         <p id="para"></p>
