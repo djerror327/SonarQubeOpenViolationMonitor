@@ -66,4 +66,20 @@ public class SonarController {
         }
         return list;
     }
+
+    @RequestMapping(value = "/authors", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody List<String> getAuthors(@RequestBody String project) {
+
+
+        SonarQube sonar = new SonarQube();
+        sonar.setProject(project);
+        try {
+            return sonarService.getAuthors(sonar);
+        } catch (IOException | ParseException e) {
+            e.printStackTrace();
+        }
+        ArrayList<String> list = new ArrayList<>();
+        list.add("Data not loaded");
+        return list;
+    }
 }

@@ -19,10 +19,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @SuppressWarnings("unchecked")
 @Service
@@ -45,8 +42,9 @@ public class SonarService {
 
         String server = env.getProperty("sonar.server");
         String api = env.getProperty("sonar.api.issues");
+        String pageSize = env.getProperty("sonar.api.ps");
 
-        JSONObject jsonObject = SonarClient.getResponse(server + api + sonarQube.getProject(), getAuthHeader());
+        JSONObject jsonObject = SonarClient.getResponse(server + api + sonarQube.getProject() + pageSize, getAuthHeader());
         JSONArray issuesList = (JSONArray) jsonObject.get("issues");
 
         ArrayList<String> list = new ArrayList<>();
@@ -74,11 +72,26 @@ public class SonarService {
         JSONArray jsonArray = (JSONArray) jsonObject.get("components");
         ArrayList<String> list = new ArrayList<>();
         jsonArray.forEach(jObj ->
-                {
-                    list.add(((JSONObject) jObj).get("key").toString());
-                }
+                list.add(((JSONObject) jObj).get("key").toString())
         );
         Collections.sort(list);
         return list;
+    }
+
+    public List<String> getAuthors(SonarQube sonarQube) throws IOException, ParseException {
+        String server = env.getProperty("sonar.server");
+        String api = env.getProperty("sonar.api.issues");
+        String pageSize = env.getProperty("sonar.api.ps");
+
+        JSONObject jsonObject = SonarClient.getResponse(server + api + sonarQube.getProject() + pageSize, getAuthHeader());
+        JSONArray issuesList = (JSONArray) jsonObject.get("issues");
+        ArrayList<String> list = new ArrayList<>();
+        issuesList.forEach(jObj ->
+                list.add(((JSONObject) jObj).get("author").toString())
+        );
+        HashSet<String> hashSet = new HashSet<>(list);
+        ArrayList<String> listAuthors = new ArrayList<>(hashSet);
+        Collections.sort(listAuthors);
+        return listAuthors;
     }
 }

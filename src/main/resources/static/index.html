@@ -10,18 +10,18 @@
     <title>Title</title>
     <script>
 
+        // Get sonar violation count for perticular author
         function sendData() {
-            var project = document.getElementById('project').value;
-            var name = document.getElementById('name').value;
+            var project = document.getElementById('cmbProjects').value;
+            var name = document.getElementById('cmbAuhors').value;
             var date = document.getElementById('date').value;
             var jsonData = { "project": "" + project + "", "author": "" + name + "", "date": "" + date + "" }
 
             var xmlhttp = new XMLHttpRequest();
-            
+
             xmlhttp.onreadystatechange = function () {
                 if (this.readyState == 4 && this.status == 200) {
-                    document.getElementById("para").innerHTML =
-                        this.responseText;
+                    document.getElementById("para").innerHTML = this.responseText;
                 }
             };
             xmlhttp.open('POST', '/sonarViolationCount', true);
@@ -31,6 +31,73 @@
             return false; // To avoid actual submission of the form
 
         }
+
+        //Get sonar project list
+        function getProjects() {
+
+            fetch('/projects', {
+                method: 'get'
+            }).then((response) => {
+                return response.json();
+            }).then((data) => {
+
+                data.forEach(setProjectsToCombo);
+            }
+            )
+                .catch(function (err) {
+                    console.log(err);
+                });
+        }
+        //set all projects to dropdown from json
+        function setProjectsToCombo(item, inex) {
+
+            var option = document.createElement("option");
+            option.text = item;
+            option.value = item;
+            var cmbProjects = document.getElementById('cmbProjects');
+            cmbProjects.appendChild(option);
+
+        }
+        document.addEventListener("DOMContentLoaded", getProjects);
+
+        function getAuthors() {
+            console.log("get authors method calling...")
+            var project = document.getElementById('cmbProjects').value;
+
+            var jsonData = { "project": "" + project + "" }
+
+            var xmlhttp = new XMLHttpRequest();
+
+            xmlhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    var jsonObj = JSON.parse(this.responseText)
+
+                    var cmbProjects = document.getElementById('cmbAuhors');
+                    var i, L = cmbProjects.options.length - 1;
+                    for (i = L; i >= 0; i--) {
+                        cmbProjects.remove(i);
+                    }
+                    for (var i = 0; i < jsonObj.length; i++) {
+                        setAuthorsToCombo(jsonObj[i]);
+                    }
+                }
+            };
+            xmlhttp.open('POST', '/authors', true);
+            xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            xmlhttp.send(project);
+
+            return false; // To avoid actual submission of the form
+
+        }
+        //set all projects to dropdown from json
+        function setAuthorsToCombo(item) {
+            var cmbProjects = document.getElementById('cmbAuhors');
+            var option = document.createElement("option");
+            option.text = item;
+            option.value = item;
+            cmbProjects.appendChild(option);
+        }
+        // document.addEventListener("DOMContentLoaded", getAuthors);
     </script>
 
 </head>
@@ -38,14 +105,18 @@
 <body>
     <form id="form">
 
-
-        <p>project key : <input id="project" type="text" name="project" value="Java_Robotic" required /></p>
-        author <input id="name" type="text" name="author" value="djerror327@gmail.com" required /><br />
+        <!-- author <input id="name" type="text" name="author" value="djerror327@gmail.com" required /><br /> -->
+        project<select id="cmbProjects" name="project" onchange="getAuthors()" required>
+            <option selected disabled hidden>Select a project</option>
+        </select><br />
+        author<select id="cmbAuhors" name="author" required>
+            <option disabled selected hidden>Select an author</option>
+        </select><br />
         date<input id="date" type="date" name="date" required /><br />
         <p><input type="button" onclick="sendData()" value="click" /></p>
-
+        <!-- <button onclick="getAuthors()">load authors</button> -->
         <p id="para"></p>
-
+        <p id="auth"></p>
     </form>
 </body>
 
